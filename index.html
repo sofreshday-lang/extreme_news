@@ -4,653 +4,795 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Extreme News Insight | Final</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link
-        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&family=Noto+Sans+KR:wght@400;700&display=swap"
-        rel="stylesheet">
+    <title>네이버 뉴스 모니터링 v2</title>
     <style>
         :root {
-            --background: #050505;
-            --foreground: #ffffff;
-            --card-bg: rgba(20, 20, 20, 0.8);
-            --card-border: rgba(255, 255, 255, 0.1);
-            --primary: #caff33;
-            --primary-hover: #b8e62e;
-            --secondary: #1a1a1a;
-            --muted: #888888;
-            --radius-lg: 20px;
-            --radius-md: 12px;
-            --radius-sm: 8px;
-            --shadow: 0 10px 40px rgba(0, 0, 0, 0.8);
+            --primary: #03c75a;
+            --primary-dark: #02b351;
+            --bg-body: #f0f2f5;
+            --bg-card: rgba(255, 255, 255, 0.9);
+            --text-main: #1e1e23;
+            --text-sub: #666;
+            --accent: #ff4757;
+            --shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.07);
+            --radius: 12px;
         }
 
         * {
             box-sizing: border-box;
-            padding: 0;
             margin: 0;
+            padding: 0;
+            font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, system-ui, Roboto, 'Helvetica Neue', 'Segoe UI', 'Apple SD Gothic Neo', 'Noto Sans KR', 'Malgun Gothic', sans-serif;
         }
 
         body {
-            background-color: var(--background);
-            color: var(--foreground);
-            font-family: 'Inter', 'Noto Sans KR', sans-serif;
+            background-color: var(--bg-body);
+            color: var(--text-main);
             line-height: 1.6;
-            min-height: 100vh;
-            background-image:
-                radial-gradient(circle at 15% 15%, rgba(202, 255, 51, 0.05) 0%, transparent 35%),
-                radial-gradient(circle at 85% 85%, rgba(202, 255, 51, 0.05) 0%, transparent 35%);
-            background-attachment: fixed;
+            padding: 40px 20px;
         }
 
         .container {
-            max-width: 1200px;
+            max-width: 1000px;
             margin: 0 auto;
-            padding: 3rem 1.5rem;
         }
 
         header {
             text-align: center;
-            margin-bottom: 3.5rem;
+            margin-bottom: 40px;
         }
 
-        .main-title {
-            font-size: 3.5rem;
-            font-weight: 800;
-            letter-spacing: -0.05em;
-            background: linear-gradient(135deg, #fff 40%, #888 100%);
-            background-clip: text;
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            margin-bottom: 0.5rem;
+        header h1 {
+            font-size: 2.5rem;
+            color: var(--primary);
+            margin-bottom: 10px;
+            letter-spacing: -1px;
         }
 
-        .sub-title {
-            color: var(--muted);
-            font-size: 1.1rem;
+        header p {
+            color: var(--text-sub);
         }
 
-        .panel {
-            background: var(--card-bg);
-            backdrop-filter: blur(25px);
-            border: 1px solid var(--card-border);
-            border-radius: var(--radius-lg);
-            padding: 2.5rem;
+        .card {
+            background: var(--bg-card);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.18);
+            border-radius: var(--radius);
             box-shadow: var(--shadow);
-            margin-bottom: 2.5rem;
-            display: flex;
-            flex-direction: column;
-            gap: 2.5rem;
+            padding: 30px;
+            margin-bottom: 20px;
+            transition: all 0.3s ease;
         }
 
-        .section-label {
-            font-size: 0.95rem;
-            font-weight: 800;
-            color: var(--primary);
-            margin-bottom: 1.25rem;
-            display: flex;
-            align-items: center;
-            gap: 0.6rem;
-            text-transform: uppercase;
-            letter-spacing: 0.08em;
-        }
-
-        .keyword-grid {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 0.8rem;
-        }
-
-        .keyword-chip {
-            padding: 0.7rem 1.25rem;
-            background: rgba(255, 255, 255, 0.04);
-            border: 1px solid var(--card-border);
-            border-radius: 50px;
-            font-size: 0.95rem;
-            cursor: pointer;
-            transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
-            user-select: none;
-            color: #ccc;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-
-        .keyword-chip:hover {
-            background: rgba(255, 255, 255, 0.08);
-            border-color: rgba(255, 255, 255, 0.2);
-            color: #fff;
-        }
-
-        .keyword-chip.active {
-            background: rgba(202, 255, 51, 0.12);
-            border-color: var(--primary);
-            color: var(--primary);
+        .section-title {
+            font-size: 1.2rem;
             font-weight: 700;
-            box-shadow: 0 0 20px rgba(202, 255, 51, 0.1);
-        }
-
-        .input-row {
-            display: flex;
-            gap: 1rem;
-            align-items: center;
-        }
-
-        .search-container {
-            flex: 1;
-            position: relative;
-        }
-
-        input[type="text"] {
-            width: 100%;
-            background: rgba(0, 0, 0, 0.4);
-            border: 1px solid var(--card-border);
-            border-radius: var(--radius-md);
-            padding: 1rem 1.5rem;
-            color: #fff;
-            font-size: 1.1rem;
-            outline: none;
-            transition: all 0.3s;
-        }
-
-        input[type="text"]:focus {
-            border-color: var(--primary);
-            background: rgba(0, 0, 0, 0.6);
-            box-shadow: 0 0 0 4px rgba(202, 255, 51, 0.05);
-        }
-
-        .date-config {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 2rem;
-            align-items: flex-end;
-            padding-top: 2rem;
-            border-top: 1px solid var(--card-border);
-        }
-
-        .config-item {
-            display: flex;
-            flex-direction: column;
-            gap: 0.75rem;
-        }
-
-        select {
-            background: var(--secondary);
-            border: 1px solid var(--card-border);
-            border-radius: var(--radius-sm);
-            padding: 0.8rem 2.5rem 0.8rem 1.25rem;
-            color: #fff;
-            appearance: none;
-            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%23888'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E");
-            background-repeat: no-repeat;
-            background-position: right 1rem center;
-            background-size: 1.2rem;
-            cursor: pointer;
-            outline: none;
-        }
-
-        .calendar-range {
+            margin-bottom: 20px;
             display: flex;
             align-items: center;
-            gap: 0.75rem;
-            background: rgba(255, 255, 255, 0.03);
-            padding: 0.6rem 1rem;
-            border-radius: var(--radius-sm);
-            border: 1px solid var(--card-border);
+            gap: 10px;
         }
 
-        input[type="date"] {
-            background: transparent;
-            border: none;
-            color: #fff;
-            font-family: inherit;
-            outline: none;
-            cursor: pointer;
-            font-size: 0.95rem;
+        .section-title::before {
+            content: '';
+            display: block;
+            width: 4px;
+            height: 20px;
+            background: var(--primary);
+            border-radius: 2px;
         }
 
-        .action-row {
+        /* Keyword Selection Area */
+        .keyword-area {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        .keyword-item {
             display: flex;
-            justify-content: space-between;
             align-items: center;
-            flex-wrap: wrap;
-            gap: 1.5rem;
-            margin-top: 1rem;
-        }
-
-        .mode-toggle {
-            display: flex;
-            background: #111;
-            padding: 0.4rem;
-            border-radius: 50px;
-            border: 1px solid var(--card-border);
-        }
-
-        .mode-btn {
-            padding: 0.5rem 1.25rem;
-            border-radius: 50px;
-            border: none;
-            background: transparent;
-            color: var(--muted);
-            font-size: 0.85rem;
-            font-weight: 700;
+            background: #fff;
+            padding: 10px 15px;
+            border-radius: 8px;
+            border: 1px solid #ddd;
             cursor: pointer;
             transition: all 0.2s;
+            user-select: none;
         }
 
-        .mode-btn.active {
-            background: var(--primary);
-            color: #000;
-        }
-
-        .btn {
-            padding: 1rem 2.5rem;
-            border-radius: var(--radius-md);
-            font-weight: 800;
-            border: none;
-            cursor: pointer;
-            transition: all 0.3s;
-            font-size: 1.1rem;
-            display: flex;
-            align-items: center;
-            gap: 0.75rem;
-        }
-
-        .btn-primary {
-            background: var(--primary);
-            color: #000;
-            box-shadow: 0 4px 25px rgba(202, 255, 51, 0.25);
-        }
-
-        .btn-primary:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 8px 35px rgba(202, 255, 51, 0.4);
-        }
-
-        .btn-outline {
-            background: transparent;
-            border: 1px solid var(--card-border);
-            color: var(--muted);
-            padding: 0.6rem 1.25rem;
-            font-size: 0.9rem;
-        }
-
-        .btn-outline:hover {
-            border-color: #fff;
-            color: #fff;
-        }
-
-        #results-area {
-            display: none;
-            margin-top: 4rem;
-        }
-
-        .results-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 2.5rem;
-            padding-bottom: 1.25rem;
-            border-bottom: 2px solid var(--card-border);
-        }
-
-        .kw-section {
-            background: var(--card-bg);
-            border: 1px solid var(--card-border);
-            border-radius: var(--radius-md);
-            margin-bottom: 2rem;
-            overflow: hidden;
-            transition: border-color 0.3s;
-        }
-
-        .kw-section:hover {
-            border-color: rgba(202, 255, 51, 0.3);
-        }
-
-        .kw-header {
-            padding: 1.5rem 2rem;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            cursor: pointer;
-            background: rgba(255, 255, 255, 0.02);
-            transition: background 0.2s;
-        }
-
-        .kw-header:hover {
-            background: rgba(255, 255, 255, 0.05);
-        }
-
-        .kw-name {
-            font-size: 1.25rem;
-            font-weight: 800;
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-        }
-
-        .tag-pill {
-            font-size: 0.8rem;
-            padding: 0.2rem 0.8rem;
-            border-radius: 50px;
-            background: rgba(202, 255, 51, 0.15);
-            color: var(--primary);
-            font-weight: 700;
-        }
-
-        .news-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
-            gap: 1.5rem;
-            padding: 2rem;
-            border-top: 1px solid var(--card-border);
-        }
-
-        .news-card {
-            background: rgba(255, 255, 255, 0.02);
-            border: 1px solid var(--card-border);
-            border-radius: var(--radius-sm);
-            padding: 1.5rem;
-            text-decoration: none;
-            display: flex;
-            flex-direction: column;
-            gap: 1rem;
-            transition: all 0.3s;
-        }
-
-        .news-card:hover {
-            background: rgba(255, 255, 255, 0.06);
+        .keyword-item:hover {
             border-color: var(--primary);
-            transform: translateY(-5px);
+            background: #f0fff4;
         }
 
-        .news-title {
-            font-size: 1.1rem;
-            font-weight: 700;
-            color: #fff;
-            line-height: 1.5;
+        .keyword-item input {
+            margin-right: 10px;
+            accent-color: var(--primary);
+            width: 18px;
+            height: 18px;
         }
 
-        .news-desc {
-            font-size: 0.9rem;
-            color: var(--muted);
-            display: -webkit-box;
-            -webkit-line-clamp: 3;
-            line-clamp: 3;
-            -webkit-box-orient: vertical;
-            overflow: hidden;
-        }
-
-        .news-meta {
-            margin-top: auto;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            font-size: 0.8rem;
+        .keyword-item.selected {
+            border-color: var(--primary);
+            background: #f0fff4;
             color: var(--primary);
             font-weight: 600;
         }
 
-        .loader-wrap {
-            text-align: center;
-            padding: 5rem;
+        .controls {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 10px 20px;
+            border-radius: 8px;
+            border: none;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .btn-outline {
+            background: #fff;
+            border: 1px solid #ddd;
+            color: var(--text-sub);
+        }
+
+        .btn-outline:hover {
+            border-color: #999;
+            color: var(--text-main);
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: #fff;
+            padding: 12px 40px;
+            font-size: 1.1rem;
+        }
+
+        .btn-primary:hover {
+            background: var(--primary-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(3, 199, 90, 0.3);
+        }
+
+        .btn-danger {
+            background: #fff;
+            color: var(--accent);
+            border: 1px solid var(--accent);
+        }
+
+        .btn-danger:hover {
+            background: var(--accent);
+            color: #fff;
+        }
+
+        /* AND/OR Switch */
+        .search-mode-container {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 20px;
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 10px;
+        }
+
+        .mode-label {
+            font-weight: 600;
+            color: var(--text-sub);
+        }
+
+        .toggle-switch {
+            position: relative;
+            display: inline-block;
+            width: 120px;
+            height: 38px;
+        }
+
+        .toggle-switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .toggle-slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            transition: .4s;
+            border-radius: 34px;
+            display: flex;
+            align-items: center;
+            justify-content: space-around;
+            padding: 0 10px;
+            color: #fff;
+            font-size: 0.85rem;
+            font-weight: bold;
+        }
+
+        .toggle-slider:before {
+            position: absolute;
+            content: "";
+            height: 30px;
+            width: 55px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 20px;
+            z-index: 1;
+        }
+
+        input:checked+.toggle-slider {
+            background-color: var(--primary);
+        }
+
+        input:checked+.toggle-slider:before {
+            transform: translateX(57px);
+        }
+
+        .mode-text {
+            z-index: 2;
+            pointer-events: none;
+        }
+
+        /* Custom Keyword Area */
+        .custom-keyword-area {
+            margin-top: 20px;
+            display: flex;
+            gap: 10px;
+        }
+
+        #customKeywordInput {
+            flex: 1;
+            padding: 12px 15px;
+            border-radius: 8px;
+            border: 1px solid #ddd;
+            font-size: 1rem;
+        }
+
+        #customKeywordInput:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(3, 199, 90, 0.1);
+        }
+
+        /* Search Conditions Area */
+        .conditions-area {
+            display: flex;
+            gap: 20px;
+            align-items: center;
+            flex-wrap: wrap;
+            margin-top: 20px;
+        }
+
+        .condition-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .condition-group label {
+            font-size: 0.9rem;
+            color: var(--text-sub);
+            font-weight: 600;
+        }
+
+        select,
+        input[type="date"] {
+            padding: 10px;
+            border-radius: 8px;
+            border: 1px solid #ddd;
+            font-size: 0.95rem;
+            background: #fff;
+        }
+
+        /* Summary Message */
+        .summary-container {
+            display: none;
+            background: #fff;
+            padding: 25px;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            margin-bottom: 20px;
+            border-left: 5px solid var(--primary);
+        }
+
+        .summary-text {
+            font-size: 1.1rem;
+            margin-bottom: 15px;
+            color: var(--text-main);
+        }
+
+        .summary-text span {
+            color: var(--primary);
+            font-weight: 700;
+        }
+
+        /* Results Area */
+        .results-container {
+            margin-top: 20px;
+        }
+
+        .global-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .keyword-section {
+            margin-bottom: 25px;
+            border-radius: var(--radius);
+            overflow: hidden;
+            background: #fff;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+        }
+
+        .section-header {
+            padding: 15px 25px;
+            background: #f8f9fa;
+            border-bottom: 1px solid #eee;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+        }
+
+        .section-header h3 {
+            font-size: 1.1rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .section-header .count-badge {
+            background: var(--primary);
+            color: #fff;
+            font-size: 0.75rem;
+            padding: 2px 8px;
+            border-radius: 10px;
+        }
+
+        .section-content {
+            padding: 0;
+            max-height: 2000px;
+            transition: max-height 0.4s ease;
+            overflow: hidden;
+        }
+
+        .collapsed .section-content {
+            max-height: 0;
+        }
+
+        .collapsed .toggle-icon {
+            transform: rotate(-90deg);
+        }
+
+        .news-list {
+            list-style: none;
+        }
+
+        .news-item {
+            padding: 20px 25px;
+            border-bottom: 1px solid #f1f3f5;
+            transition: background 0.2s;
+        }
+
+        .news-item:hover {
+            background: #fafafa;
+        }
+
+        .news-item .news-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 8px;
+            display: block;
+            text-decoration: none;
+            color: var(--text-main);
+        }
+
+        .news-item .news-title:hover {
+            color: var(--primary);
+        }
+
+        .news-item .news-meta {
+            font-size: 0.85rem;
+            color: var(--text-sub);
+        }
+
+        .loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.7);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            backdrop-filter: blur(4px);
         }
 
         .spinner {
             width: 50px;
             height: 50px;
-            border: 4px solid rgba(255, 255, 255, 0.1);
-            border-left-color: var(--primary);
+            border: 5px solid #f3f3f3;
+            border-top: 5px solid var(--primary);
             border-radius: 50%;
-            display: inline-block;
             animation: spin 1s linear infinite;
         }
 
         @keyframes spin {
-            to {
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
                 transform: rotate(360deg);
             }
         }
 
-        @media (max-width: 768px) {
-            .main-title {
-                font-size: 2.5rem;
-            }
+        .toast {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background: #333;
+            color: #fff;
+            padding: 12px 25px;
+            border-radius: 30px;
+            display: none;
+            z-index: 2000;
+        }
 
-            .panel {
-                padding: 1.5rem;
-            }
-
-            .action-row {
-                flex-direction: column;
-                align-items: stretch;
-            }
-
-            .news-grid {
-                grid-template-columns: 1fr;
-            }
+        [v-hide] {
+            display: none !important;
         }
     </style>
 </head>
 
 <body>
+
     <div class="container">
         <header>
-            <h1 class="main-title">Extreme News</h1>
-            <p class="sub-title">데이터 기반 인텔리전스 | 실시간 뉴스 모니터링</p>
+            <h1>Naver News Monitor v2</h1>
+            <p>검색 조건을 최적화하여 뉴스를 확인하세요.</p>
         </header>
 
-        <section class="panel">
-            <div>
-                <div class="section-label">
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
-                        <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
-                        <polyline points="22 4 12 14.01 9 11.01"></polyline>
-                    </svg>
-                    관심 제품 카테고리 (방안 A)
+        <!-- 검색 설정 카드 (결과 노출 시 숨김) -->
+        <div id="searchConfig">
+            <div class="card">
+                <div class="section-title">관심 키워드 선택</div>
+                <div class="controls">
+                    <button class="btn btn-outline" id="selectAll">전체 선택</button>
+                    <button class="btn btn-outline" id="deselectAll">전체 해제</button>
                 </div>
-                <div class="keyword-grid" id="keyword-grid"></div>
-                <div style="margin-top: 1.25rem; display: flex; gap: 0.8rem;">
-                    <button class="btn btn-outline" onclick="selectAll()">전체 선택</button>
-                    <button class="btn btn-outline" onclick="deselectAll()">전체 해제</button>
-                    <button class="btn btn-primary"
-                        style="margin-left: auto; font-size: 0.9rem; padding: 0.6rem 1.5rem;"
-                        onclick="handleSearch('checkbox')">선택 항목 검색</button>
+                <div class="keyword-area" id="keywordContainer"></div>
+
+                <div class="section-title" style="margin-top: 30px;">검색어 직접 입력</div>
+                <div class="custom-keyword-area">
+                    <input type="text" id="customKeywordInput" placeholder="검색할 키워드를 입력하세요 (쉼표로 구분 가능)">
                 </div>
             </div>
 
-            <div>
-                <div class="section-label">
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
-                        <circle cx="11" cy="11" r="8"></circle>
-                        <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
-                    </svg>
-                    직접 키워드 분석 (방안 A)
+            <div class="card">
+                <div class="section-title">검색 옵션</div>
+
+                <!-- AND/OR 선택 -->
+                <div class="search-mode-container">
+                    <span class="mode-label">검색 방식:</span>
+                    <label class="toggle-switch">
+                        <input type="checkbox" id="searchModeToggle">
+                        <span class="toggle-slider">
+                            <span class="mode-text">OR</span>
+                            <span class="mode-text">AND</span>
+                        </span>
+                    </label>
+                    <span style="font-size: 0.85rem; color: #888;">* AND 모드는 모든 키워드가 포함된 기사만 검색합니다.</span>
                 </div>
-                <div class="input-row">
-                    <div class="search-container">
-                        <input type="text" id="manual-input" placeholder="검색어를 입력하세요 (예: 비타민D, 신제품 뉴스)">
+
+                <div class="conditions-area">
+                    <div class="condition-group">
+                        <label>검색 기간</label>
+                        <select id="datePreset">
+                            <option value="1">최근 24시간</option>
+                            <option value="3">최근 3일</option>
+                            <option value="7">최근 7일</option>
+                            <option value="14" selected>최근 14일</option>
+                            <option value="30">최근 30일</option>
+                            <option value="custom">직접 선택</option>
+                        </select>
                     </div>
-                    <button class="btn btn-primary" onclick="handleSearch('manual')">검색</button>
-                </div>
-            </div>
-
-            <div class="date-config">
-                <div class="config-item">
-                    <span class="section-label" style="margin-bottom:0">검색 조건 설정</span>
-                    <select id="date-quick-select" onchange="syncQuickDate()">
-                        <option value="1">최근 24시간</option>
-                        <option value="3">최근 3일</option>
-                        <option value="7">최근 7일</option>
-                        <option value="14" selected>최근 14일</option>
-                        <option value="30">최근 30일</option>
-                    </select>
-                </div>
-                <div class="config-item">
-                    <span class="section-label" style="margin-bottom:0">상세 기간 선택</span>
-                    <div class="calendar-range">
-                        <input type="date" id="start-date">
-                        <span style="color:var(--muted)">~</span>
-                        <input type="date" id="end-date">
+                    <div class="condition-group" id="customDateGroup" style="display: none;">
+                        <label>시작 날짜</label>
+                        <input type="date" id="startDateInput">
+                    </div>
+                    <div class="condition-group">
+                        <label>표시 개수</label>
+                        <select id="displayCount">
+                            <option value="10">10개</option>
+                            <option value="30">30개</option>
+                            <option value="50" selected>50개</option>
+                            <option value="100">100개</option>
+                        </select>
+                    </div>
+                    <div style="flex: 1; display: flex; justify-content: flex-end; align-items: flex-end;">
+                        <button class="btn btn-primary" id="searchBtn">뉴스 검색하기</button>
                     </div>
                 </div>
-
-                <div class="action-row"
-                    style="width: 100%; margin-top: 2rem; border-top: 1px solid var(--card-border); padding-top: 2rem;">
-                    <div class="config-item">
-                        <span class="section-label" style="margin-bottom:0.5rem">검색 로직 모드</span>
-                        <div class="mode-toggle">
-                            <button class="mode-btn active" id="mode-or" onclick="setMode('OR')">키워드별 개별 (OR)</button>
-                            <button class="mode-btn" id="mode-and" onclick="setMode('AND')">모든 키워드 교집합 (AND)</button>
-                        </div>
-                    </div>
-                    <button class="btn btn-primary" style="padding: 1.25rem 4rem;" onclick="handleSearch('combined')">통합
-                        분석 시작</button>
-                </div>
             </div>
-        </section>
+        </div>
 
-        <section id="results-area">
-            <div class="results-header">
-                <div style="font-size: 1.1rem; font-weight: 700; color: var(--muted);" id="status-text">분석 결과</div>
-                <div style="display:flex; gap:0.6rem">
-                    <button class="btn btn-outline" style="border-color: var(--primary); color: var(--primary);"
-                        onclick="downloadCSV()">엑셀(CSV) 다운로드</button>
-                    <button class="btn btn-outline" onclick="expandAll()">전체 펼치기</button>
-                    <button class="btn btn-outline" onclick="collapseAll()">전체 접기</button>
-                </div>
+        <!-- 결과 요약 및 해제 버튼 (결과 노출 시 표시) -->
+        <div id="summaryArea" class="summary-container">
+            <div class="summary-text" id="summaryText"></div>
+            <div style="display: flex; gap: 10px;">
+                <button class="btn btn-danger" id="resetSearch">선택 해제</button>
             </div>
-            <div id="results-container"></div>
-        </section>
+        </div>
+
+        <!-- 결과 영역 -->
+        <div class="results-container" id="resultsContainer" style="display: none;">
+            <div class="global-actions">
+                <button class="btn btn-outline" id="expandAll">전체 펼치기</button>
+                <button class="btn btn-outline" id="collapseAll">전체 접기</button>
+            </div>
+            <div id="keywordSections"></div>
+        </div>
     </div>
 
-    <script>
-        const CATEGORIES = ["아르기닌", "블랙마카", "단백질쉐이크", "에너지젤", "모노크레아틴", "올인원포맨", "밀크씨슬", "오메가3", "쏘팔메토", "프로바이오틱스", "김종국"];
-        let selectedKws = new Set();
-        let searchMode = 'OR';
-        let latestSearchResults = null;
+    <div class="loading-overlay" id="loadingOverlay">
+        <div style="text-align: center;">
+            <div class="spinner"></div>
+            <p style="margin-top: 15px; color: var(--text-main); font-weight: 600;">뉴스를 불러오는 중...</p>
+        </div>
+    </div>
 
-        window.onload = () => {
-            renderChips();
-            syncQuickDate();
+    <div class="toast" id="toast">메시지</div>
+
+    <script>
+        const PREDEFINED_KEYWORDS = [
+            "아르기닌", "블랙마카", "단백질쉐이크", "에너지젤",
+            "모노크레아틴", "올인원포맨", "밀크씨슬", "오메가3",
+            "쏘팔메토", "프로바이오틱스", "김종국"
+        ];
+
+        let selectedKeywords = new Set();
+
+        const ui = {
+            searchConfig: document.getElementById('searchConfig'),
+            keywordContainer: document.getElementById('keywordContainer'),
+            customKeywordInput: document.getElementById('customKeywordInput'),
+            searchModeToggle: document.getElementById('searchModeToggle'),
+            datePreset: document.getElementById('datePreset'),
+            customDateGroup: document.getElementById('customDateGroup'),
+            startDateInput: document.getElementById('startDateInput'),
+            displayCount: document.getElementById('displayCount'),
+            searchBtn: document.getElementById('searchBtn'),
+            summaryArea: document.getElementById('summaryArea'),
+            summaryText: document.getElementById('summaryText'),
+            resetSearch: document.getElementById('resetSearch'),
+            resultsContainer: document.getElementById('resultsContainer'),
+            keywordSections: document.getElementById('keywordSections'),
+            loadingOverlay: document.getElementById('loadingOverlay'),
+            toast: document.getElementById('toast')
         };
 
-        function renderChips() {
-            const grid = document.getElementById('keyword-grid');
-            grid.innerHTML = '';
-            CATEGORIES.forEach(kw => {
-                const chip = document.createElement('div');
-                chip.className = `keyword-chip ${selectedKws.has(kw) ? 'active' : ''}`;
-                chip.textContent = kw;
-                chip.onclick = () => {
-                    if (selectedKws.has(kw)) selectedKws.delete(kw); else selectedKws.add(kw);
-                    renderChips();
+        function init() {
+            PREDEFINED_KEYWORDS.forEach(kw => {
+                const item = document.createElement('div');
+                item.className = 'keyword-item';
+                item.innerHTML = `<input type="checkbox" value="${kw}"><span>${kw}</span>`;
+                item.onclick = (e) => {
+                    if (e.target.tagName !== 'INPUT') {
+                        const cb = item.querySelector('input');
+                        cb.checked = !cb.checked;
+                        toggleKeyword(kw, cb.checked, item);
+                    }
                 };
-                grid.appendChild(chip);
+                item.querySelector('input').onclick = (e) => {
+                    e.stopPropagation();
+                    toggleKeyword(kw, e.target.checked, item);
+                };
+                ui.keywordContainer.appendChild(item);
+            });
+
+            ui.datePreset.onchange = () => {
+                if (ui.datePreset.value === 'custom') ui.customDateGroup.style.display = 'flex';
+                else {
+                    ui.customDateGroup.style.display = 'none';
+                    updateStartDateByPreset();
+                }
+            };
+
+            updateStartDateByPreset();
+
+            document.getElementById('selectAll').onclick = () => setAllKeywords(true);
+            document.getElementById('deselectAll').onclick = () => setAllKeywords(false);
+            document.getElementById('expandAll').onclick = () => toggleAllSections(true);
+            document.getElementById('collapseAll').onclick = () => toggleAllSections(false);
+            ui.searchBtn.onclick = performSearch;
+            ui.resetSearch.onclick = resetSearch;
+
+            ui.customKeywordInput.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') performSearch();
             });
         }
 
-        function selectAll() { CATEGORIES.forEach(kw => selectedKws.add(kw)); renderChips(); }
-        function deselectAll() { selectedKws.clear(); renderChips(); }
-
-        function syncQuickDate() {
-            const days = parseInt(document.getElementById('date-quick-select').value);
-            const end = new Date();
-            const start = new Date();
-            start.setDate(end.getDate() - days);
-            document.getElementById('start-date').value = start.toISOString().split('T')[0];
-            document.getElementById('end-date').value = end.toISOString().split('T')[0];
+        function updateStartDateByPreset() {
+            const days = parseInt(ui.datePreset.value) || 14;
+            const d = new Date();
+            d.setDate(d.getDate() - days);
+            ui.startDateInput.value = d.toISOString().split('T')[0];
         }
 
-        function setMode(mode) {
-            searchMode = mode;
-            document.getElementById('mode-and').classList.toggle('active', mode === 'AND');
-            document.getElementById('mode-or').classList.toggle('active', mode === 'OR');
+        function toggleKeyword(kw, selected, element) {
+            if (selected) {
+                selectedKeywords.add(kw);
+                element.classList.add('selected');
+            } else {
+                selectedKeywords.delete(kw);
+                element.classList.remove('selected');
+            }
         }
 
-        async function handleSearch(target) {
-            let finalKws = [];
-            if (target === 'checkbox') finalKws = Array.from(selectedKws);
-            else if (target === 'manual') { const val = document.getElementById('manual-input').value.trim(); if (val) finalKws = [val]; }
-            else {
-                const manual = document.getElementById('manual-input').value.trim();
-                finalKws = [...new Set([...Array.from(selectedKws), ...(manual ? [manual] : [])])];
+        function setAllKeywords(selected) {
+            const items = ui.keywordContainer.querySelectorAll('.keyword-item');
+            items.forEach(item => {
+                const cb = item.querySelector('input');
+                cb.checked = selected;
+                toggleKeyword(cb.value, selected, item);
+            });
+        }
+
+        function showUI(mode) {
+            if (mode === 'results') {
+                ui.searchConfig.style.display = 'none';
+                ui.summaryArea.style.display = 'block';
+                ui.resultsContainer.style.display = 'block';
+            } else {
+                ui.searchConfig.style.display = 'block';
+                ui.summaryArea.style.display = 'none';
+                ui.resultsContainer.style.display = 'none';
+            }
+        }
+
+        function resetSearch() {
+            showUI('search');
+            // 키워드 선택 상태는 유지할지 초기화할지 선택 가능. 
+            // 요청사항에 "초기 화면으로 돌아가는 거야" 라고 했으므로 UI 가시성만 조절.
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        async function performSearch() {
+            const customVal = ui.customKeywordInput.value.trim();
+            const customKeywords = customVal ? customVal.split(',').map(k => k.trim()).filter(k => k) : [];
+            const allKeywords = Array.from(new Set([...Array.from(selectedKeywords), ...customKeywords]));
+
+            if (allKeywords.length === 0) {
+                showToast('최소 하나의 키워드를 선택하거나 입력해주세요.');
+                return;
             }
 
-            if (finalKws.length === 0) { alert('최소 하나의 키워드를 선택하거나 입력해주세요.'); return; }
-
-            const start = document.getElementById('start-date').value;
-            const end = document.getElementById('end-date').value;
-            const resultsArea = document.getElementById('results-area');
-            const container = document.getElementById('results-container');
-            const statusText = document.getElementById('status-text');
-
-            resultsArea.style.display = 'block';
-            container.innerHTML = `<div class="loader-wrap"><div class="spinner"></div><div style="margin-top:1.5rem; color:var(--muted)">네이버 상품 뉴스를 분석 중입니다...</div></div>`;
-            window.scrollTo({ top: resultsArea.offsetTop - 50, behavior: 'smooth' });
+            const searchMode = ui.searchModeToggle.checked ? 'AND' : 'OR';
+            ui.loadingOverlay.style.display = 'flex';
 
             try {
-                const res = await fetch('/api/news', {
+                const response = await fetch('/api/news', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ keywords: finalKws, start_date: start, end_date: end, use_and_logic: (searchMode === 'AND' && finalKws.length > 1) })
+                    body: JSON.stringify({
+                        keywords: allKeywords,
+                        startDate: ui.startDateInput.value,
+                        display: parseInt(ui.displayCount.value),
+                        searchMode: searchMode
+                    })
                 });
-                if (!res.ok) throw new Error('API 오류');
-                const data = await res.json();
-                latestSearchResults = data;
-                renderResults(data);
-                statusText.textContent = `분석 완료: ${new Date().toLocaleTimeString()}`;
-            } catch (e) {
-                container.innerHTML = `<div style="text-align:center; padding: 5rem; color: #ff5555;">오류가 발생했습니다.</div>`;
+
+                if (!response.ok) throw new Error('서버 에러');
+                const data = await response.json();
+
+                renderResults(data, allKeywords, searchMode);
+                showUI('results');
+
+                // 결과 요약 텍스트 업데이트
+                const kwStr = allKeywords.map(k => `"${k}"`).join(", ");
+                const today = new Date().toISOString().split('T')[0];
+                ui.summaryText.innerHTML = `아래 결과는 <span>${kwStr}</span> 키워드(${searchMode})가 포함된 <span>${ui.startDateInput.value}</span>부터 <span>${today}</span>까지의 네이버 뉴스 기사를 가져온 내용입니다.`;
+
+            } catch (err) {
+                console.error(err);
+                showToast('뉴스를 불러오는 데 실패했습니다.');
+            } finally {
+                ui.loadingOverlay.style.display = 'none';
             }
         }
 
-        function renderResults(data) {
-            const container = document.getElementById('results-container');
-            container.innerHTML = '';
+        function renderResults(data, allKeywords, mode) {
+            ui.keywordSections.innerHTML = '';
             const keys = Object.keys(data);
-            if (keys.length === 0) { container.innerHTML = '<div style="text-align:center; padding: 5rem; color: var(--muted);">분석 데이터 없음</div>'; return; }
+
+            if (keys.length === 0) {
+                ui.keywordSections.innerHTML = '<div class="card empty-message">검색 결과가 없습니다.</div>';
+                return;
+            }
 
             keys.forEach(kw => {
                 const items = data[kw];
                 const section = document.createElement('div');
-                section.className = 'kw-section';
-                section.innerHTML = `
-                    <div class="kw-header" onclick="toggleSection(this)"><div class="kw-name"><span class="tag-pill">KEYWORD</span>${kw}</div><div style="font-weight:700; color:var(--primary)">${items.length}건</div></div>
-                    <div class="kw-content">
-                        ${items.length > 0 ? `
-                            <div class="news-grid">
-                                ${items.map(item => `
-                                    <a href="${item.link}" target="_blank" rel="noopener noreferrer" class="news-card">
-                                        <div class="news-title">${item.title}</div>
-                                        <div class="news-desc">${item.description}</div>
-                                        <div class="news-meta"><span>네이버뉴스</span><span>${item.pubDate.split(' ')[0]}</span></div>
-                                    </a>`).join('')}
-                            </div>` : `<div style="padding: 4rem; text-align:center; color: var(--muted);">신규 기사 없음</div>`}
-                    </div>`;
-                container.appendChild(section);
+                section.className = 'keyword-section';
+
+                const header = document.createElement('div');
+                header.className = 'section-header';
+                const displayName = mode === 'AND' ? '결합 검색 결과' : kw;
+                header.innerHTML = `
+                    <h3>${displayName} <span class="count-badge">${items.length}</span></h3>
+                    <span class="toggle-icon">▼</span>
+                `;
+                header.onclick = () => section.classList.toggle('collapsed');
+
+                const content = document.createElement('div');
+                content.className = 'section-content';
+
+                if (items.length === 0) {
+                    content.innerHTML = `<div class="empty-message">해당 기간 내 결과가 없습니다.</div>`;
+                } else {
+                    const list = document.createElement('ul');
+                    list.className = 'news-list';
+                    items.forEach(item => {
+                        const li = document.createElement('li');
+                        li.className = 'news-item';
+                        li.innerHTML = `
+                            <a href="${item.link}" target="_blank" rel="noopener noreferrer" class="news-title">${escapeHTML(item.title)}</a>
+                            <div class="news-meta">
+                                <span>📅 ${item.pubDate}</span>
+                            </div>
+                        `;
+                        list.appendChild(li);
+                    });
+                    content.appendChild(list);
+                }
+
+                section.appendChild(header);
+                section.appendChild(content);
+                ui.keywordSections.appendChild(section);
             });
         }
 
-        function downloadCSV() {
-            if (!latestSearchResults) { alert('먼저 검색을 해주세요.'); return; }
-            let csv = "\uFEFF키워드,제목,발행일,링크\n";
-            Object.keys(latestSearchResults).forEach(kw => {
-                latestSearchResults[kw].forEach(item => {
-                    csv += `"${kw}","${item.title.replace(/"/g, '""')}","${item.pubDate}","${item.link}"\n`;
-                });
+        function toggleAllSections(expand) {
+            document.querySelectorAll('.keyword-section').forEach(s => {
+                if (expand) s.classList.remove('collapsed');
+                else s.classList.add('collapsed');
             });
-            const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
-            const link = document.createElement("a");
-            link.href = URL.createObjectURL(blob);
-            link.download = `news_report_${new Date().toISOString().split('T')[0]}.csv`;
-            link.click();
         }
 
-        function toggleSection(header) { const content = header.nextElementSibling; content.style.display = (content.style.display === 'none') ? 'block' : 'none'; }
-        function expandAll() { document.querySelectorAll('.kw-content').forEach(c => c.style.display = 'block'); }
-        function collapseAll() { document.querySelectorAll('.kw-content').forEach(c => c.style.display = 'none'); }
+        function showToast(msg) {
+            ui.toast.textContent = msg;
+            ui.toast.style.display = 'block';
+            setTimeout(() => { ui.toast.style.display = 'none'; }, 3000);
+        }
+
+        function escapeHTML(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        init();
     </script>
 </body>
 
