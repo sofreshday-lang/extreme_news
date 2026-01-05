@@ -23,6 +23,27 @@
    python local_server.py
    ```
 
-## Vercel 배포 방법
-1. Vercel Dashboard에서 `news_dashboard_v2` 폴더를 프로젝트 루트로 지정하여 배포합니다.
-2. 환경 변수 `NAVER_CLIENT_ID` 및 `NAVER_CLIENT_SECRET`을 설정하세요.
+## Vercel 배포 방법 (상세 단계)
+
+사내 URL 공유를 위해 Vercel에 배포하는 구체적인 방법입니다.
+
+### 1단계: 프로젝트 업로드
+- 작성된 소스 코드를 GitHub, GitLab 또는 Bitbucket 저장소에 Push합니다.
+- (참고) `news_dashboard_v2` 폴더가 저장소의 루트이거나, 전체 폴더를 올린 후 Vercel 설정에서 폴더를 지정할 수 있습니다.
+
+### 2단계: Vercel에서 프로젝트 가져오기
+1. [Vercel Dashboard](https://vercel.com/dashboard)에 접속하여 **[+ New Project]** 버튼을 클릭합니다.
+2. 코드가 올라간 저장소(Repository)를 연결하고 **[Import]**를 클릭합니다.
+
+### 3단계: 프로젝트 설정 (중요)
+1. **Root Directory**: 
+   - 만약 전체 `naver_api` 폴더를 통째로 올렸다면, `Edit` 버튼을 눌러 `news_dashboard_v2` 폴더를 선택해야 합니다.
+   - 해당 폴더 내에 `index.html`과 `api/` 폴더가 있어야 정상 작동합니다.
+2. **Environment Variables**:
+   - `Environment Variables` 섹션을 확장합니다.
+   - **Key**: `NAVER_CLIENT_ID`, **Value**: (본인의 클라이언트 ID) 입력 후 `[Add]`
+   - **Key**: `NAVER_CLIENT_SECRET`, **Value**: (본인의 클라이언트 시크릿) 입력 후 `[Add]`
+
+### 4단계: 배포 실행
+- 하단의 **[Deploy]** 버튼을 클릭합니다.
+- 배포가 완료되면 생성된 `https://...vercel.app` 형태의 URL을 복사하여 사내에 공유하면 됩니다.
